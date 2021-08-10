@@ -52,8 +52,15 @@ const Navbar = ({
 
         if (newShowLeaderboard) {
             fetchLeaderboard();
+
+            closeMenu();
+            closeNotifications();
         }
     };
+
+    const closeLeaderboard = () => {
+        setShowLeaderboard(false);
+    }
 
     const getProfileStyle = () => {
         const profilePicture = getProfilePictureUrl(
@@ -75,16 +82,27 @@ const Navbar = ({
         return '-';
     };
 
-    const openMobileMenu = () => {
-        setMenuOpened(true);
+    const toggleMobileMenu = () => {
+        const isOpen = !menuOpened;
+        if(isOpen) {
+            closeNotifications();
+            closeLeaderboard();
+        }
+        setMenuOpened(isOpen);
     };
 
-    const closeMobileMenu = () => {
+    const closeMenu = () => {
         setMenuOpened(false);
     };
 
     const showNotificationsHandler = () => {
-        setShowNotifications(!showNotifications);
+        const isOpen = !showNotifications;
+        if(isOpen) {
+            closeMenu();
+            closeLeaderboard();
+        }
+        setShowNotifications(isOpen);
+
     };
 
     const closeNotifications = () => {
@@ -92,7 +110,13 @@ const Navbar = ({
     };
 
     const showDesktopMenuHandler = () => {
-        setMenuOpened(!menuOpened);
+        const isOpen = !menuOpened;
+        if(isOpen) {
+            closeMenu();
+            closeLeaderboard();
+            closeNotifications();
+        }
+        setMenuOpened(isOpen);
     };
 
     const isRouteActive = (route) => {
@@ -126,7 +150,7 @@ const Navbar = ({
                 <Icon
                     className={style.mainMenu}
                     iconType={IconType.mainMenu}
-                    onClick={openMobileMenu}
+                    onClick={toggleMobileMenu}
                 />
                 <div
                     className={style.ranking}
@@ -176,11 +200,10 @@ const Navbar = ({
             </div>
             {showLeaderboard && (
                 <div className={style.leaderboard}>
-                    <img
-                        src={cross}
-                        alt="close"
-                        className={style.closeLeaderboard}
+                    <Icon
+                        iconType={'cross'}
                         onClick={onChangeLeaderboard}
+                        className={style.closeLeaderboard}
                     />
                     <p className={style.leaderboardHeading}>
                         Community
@@ -217,7 +240,7 @@ const Navbar = ({
             )}
             <MainMenu
                 opened={menuOpened}
-                closeMobileMenu={closeMobileMenu}
+                closeMobileMenu={closeMenu}
                 sellTransactions={sellTransactions}
             />
         </div>
