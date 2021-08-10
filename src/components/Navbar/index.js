@@ -133,9 +133,11 @@ const Navbar = ({
             </Link>
         );
     };
+    
+    const hasOpenDrawer = menuOpened || showNotifications || showLeaderboard;
 
     return (
-        <div className={style.navbar}>
+        <div className={classNames(style.navbar, hasOpenDrawer && style.navbarSticky)}>
             <div className={classNames(style.navbarItems, style.hideOnMobile)}>
                 <img
                     src={Logo}
@@ -198,46 +200,44 @@ const Navbar = ({
                     style={getProfileStyle()}
                 ></div>
             </div>
-            {showLeaderboard && (
-                <div className={style.leaderboard}>
-                    <Icon
-                        iconType={'cross'}
-                        onClick={onChangeLeaderboard}
-                        className={style.closeLeaderboard}
-                    />
-                    <p className={style.leaderboardHeading}>
-                        Community
-                        <br />
-                        Leaderboard
-                    </p>
-                    <div className={style.leaderboardTable}>
-                        <div className={style.tableHeadings}>
-                            <p className={style.rankingHeading}>RANKING</p>
-                            <p className={style.userHeading}>USER</p>
-                            <p className={style.tokenHeading}>TOKENBALANCE</p>
-                        </div>
-                        <div className={style.leaderboardRanking}>
-                            {leaderboard &&
-                            leaderboard.map((user) => {
-                                return (
-                                    <LeaderboardItem
-                                        user={user}
-                                        key={user.userId}
-                                    />
-                                );
-                            })}
-                        </div>
+            <div className={`${style.leaderboard} ${!showLeaderboard ? style.hideLeaderboard : ''}`}>
+                <Icon
+                    iconType={'cross'}
+                    onClick={onChangeLeaderboard}
+                    className={style.closeLeaderboard}
+                />
+                <p className={style.leaderboardHeading}>
+                    Community
+                    <br />
+                    Leaderboard
+                </p>
+                <div className={style.leaderboardTable}>
+                    <div className={style.tableHeadings}>
+                        <p className={style.rankingHeading}>RANKING</p>
+                        <p className={style.userHeading}>USER</p>
+                        <p className={style.tokenHeading}>TOKENBALANCE</p>
+                    </div>
+                    <div className={style.leaderboardRanking}>
+                        {leaderboard &&
+                        leaderboard.map((user) => {
+                            return (
+                                <LeaderboardItem
+                                    user={user}
+                                    key={user.userId}
+                                />
+                            );
+                        })}
                     </div>
                 </div>
-            )}
-            {showNotifications && (
+            </div>
+            <div className={`${style.notifications} ${!showNotifications ? style.hideNotifications : ''}`}>
                 <Notifications
                     notifications={notifications}
                     unreadNotifications={unreadNotifications}
                     closeNotifications={closeNotifications}
                     setUnread={setUnread}
                 />
-            )}
+            </div>
             <MainMenu
                 opened={menuOpened}
                 closeMobileMenu={closeMenu}
